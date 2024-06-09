@@ -446,9 +446,9 @@
 // }
 import * as React from 'react';
 import * as strings from 'KcrudWebPartStrings';
-import { sp } from "@pnp/sp";
-import { Web } from "@pnp/sp/webs";
-import { IList, IItemAddResult } from "@pnp/sp/lists";
+import { sp, Web } from "@pnp/sp";
+// import { Web } from "@pnp/sp/webs";
+//import { IList, IItemAddResult } from "@pnp/sp/lists";
 
 import styles from './Kcrud.module.scss';
 import { IKcrudProps } from './IKcrudProps';
@@ -504,7 +504,7 @@ export default class Kcrud extends React.Component<IKcrudProps, IStates> {
   }
 
   public async fetchData() {
-    let web = Web(this.props.webURL);
+    let web = new Web(this.props.webURL);
     const items: any[] = await web.lists.getByTitle("EmployeeDetails").items.select("*", "Employee_x0020_Name/Title").expand("Employee_x0020_Name/ID").get();
     console.log(items);
     this.setState({ Items: items });
@@ -564,7 +564,7 @@ export default class Kcrud extends React.Component<IKcrudProps, IStates> {
   }
 
   private async SaveData() {
-    let web = Web(this.props.webURL);
+    let web = new Web(this.props.webURL);
     await web.lists.getByTitle("EmployeeDetails").items.add({
       Employee_x0020_NameId: this.state.EmployeeId,
       HireDate: new Date(this.state.HireDate),
@@ -578,7 +578,7 @@ export default class Kcrud extends React.Component<IKcrudProps, IStates> {
   }
 
   private async UpdateData() {
-    let web = Web(this.props.webURL);
+    let web = new Web(this.props.webURL);
     await web.lists.getByTitle("EmployeeDetails").items.getById(this.state.ID).update({
       Employee_x0020_NameId: this.state.EmployeeId,
       HireDate: new Date(this.state.HireDate),
@@ -592,7 +592,7 @@ export default class Kcrud extends React.Component<IKcrudProps, IStates> {
   }
 
   private async DeleteData() {
-    let web = Web(this.props.webURL);
+    let web = new Web(this.props.webURL);
     await web.lists.getByTitle("EmployeeDetails").items.getById(this.state.ID).delete()
       .then(i => {
         console.log(i);
@@ -618,8 +618,8 @@ export default class Kcrud extends React.Component<IKcrudProps, IStates> {
               <Label>Employee Name</Label>
               <TextField
                 value={this.state.EmployeeName}
-                onChange={(event, newValue) => this.onchange(newValue, "EmployeeName")}
-
+                // onChange={(event, newValue) => this.onchange(newValue, "EmployeeName")}
+                onChange={(event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, newValue: string) => this.onchange(newValue, "EmployeeName")}
               />
             </div>
             <div>
